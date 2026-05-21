@@ -19,12 +19,8 @@ class AuthController extends Controller
             $request->session()->regenerate();
             
             $user = Auth::user();  
-
-            if($user->role=='admin'){
-                return redirect('/admin/dashboard');
-            }else{
-                return redirect('/customer/dashboard');
-            }
+            return redirect('/admin/dashboard');
+            
         }
         return back()->withErrors([
             'email'=> 'data login tidak sesuai'

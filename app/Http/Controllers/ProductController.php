@@ -30,7 +30,9 @@ class ProductController extends Controller
         ]);
 
         $image = $request->file('image');  
-        $image->storeAs('products',$image->hashName());
+        
+        // PERBAIKAN: Menambahkan parameter 'public' di bagian akhir
+        $image->storeAs('products', $image->hashName(), 'public');
 
         $products = Product::create([
             'image'=> $image->hashName(),
@@ -55,36 +57,37 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        'title' => 'required|string|min:3',
-        'description' => 'required|min:10',
-        'price' => 'required|numeric',
-        'stock' => 'required|numeric',
-    ]);
+    {
+        $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'title' => 'required|string|min:3',
+            'description' => 'required|min:10',
+            'price' => 'required|numeric',
+            'stock' => 'required|numeric',
+        ]);
 
-    $product = Product::findOrFail($id);
+        $product = Product::findOrFail($id);
 
-    if ($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
 
-        Storage::delete('product/' . $product->image);
+            Storage::disk('public')->delete('products/' . $product->image);
 
-        $image = $request->file('image');
-        $image->storeAs('product', $image->hashName());
+            $image = $request->file('image');
+            
+            $image->storeAs('products', $image->hashName(), 'public');
 
-        $product->image = $image->hashName();
-    }
+            $product->image = $image->hashName();
+        }
 
-    $product->update([
-        'title' => $request->title,
-        'description' => $request->description,
-        'price' => $request->price,
-        'stock' => $request->stock,
-    ]);
+        $product->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'price' => $request->price,
+            'stock' => $stock = $request->stock, 
+        ]);
 
-    return redirect()->route('products.index')
-        ->with('success', 'Data berhasil diubah');
+        return redirect()->route('products.index')
+            ->with('success', 'Data berhasil diubah');
     }
 
 
@@ -92,7 +95,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        Storage::delete('products/'.$product->image);
+        Storage::disk('public')->delete('products/'.$product->image);
         $product->delete();
 
         return redirect()->route('products.index')->with(['success'=>'Data Berhasil dihapus']);
