@@ -4,17 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons (Sesuai Dashboard) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <title>Login Admin | Marketplace</title>
-
+    <title>Register Admin | Marketplace</title>
     <style>
         :root {
             --primary-color: #6366f1;
-            /* Warna indigo sesuai tombol di dashboard */
             --bg-color: #f8fafc;
             --text-dark: #1e293b;
             --text-muted: #64748b;
@@ -26,13 +21,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', sans-serif;
             color: var(--text-dark);
         }
 
         .login-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 450px;
             padding: 20px;
         }
 
@@ -40,10 +35,8 @@
             background: #ffffff;
             padding: 40px;
             border-radius: 20px;
-            /* Lebih bulat sesuai dashboard */
             border: none;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
-            /* Shadow halus */
         }
 
         .brand-logo {
@@ -62,7 +55,6 @@
         .login-header h1 {
             font-size: 24px;
             font-weight: 700;
-            color: var(--text-dark);
             margin-bottom: 8px;
         }
 
@@ -75,22 +67,19 @@
         .form-label {
             font-weight: 500;
             font-size: 14px;
-            color: var(--text-dark);
             margin-bottom: 8px;
         }
 
         .form-control {
             border-radius: 10px;
-            padding: 12px 15px;
+            padding: 10px 15px;
             border: 1px solid #e2e8f0;
             background-color: #fcfcfc;
-            transition: all 0.2s;
         }
 
         .form-control:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-            background-color: #fff;
         }
 
         .btn-primary {
@@ -100,14 +89,12 @@
             font-weight: 600;
             background-color: var(--primary-color);
             border: none;
-            margin-top: 10px;
             transition: all 0.3s;
         }
 
         .btn-primary:hover {
             background-color: #4f46e5;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
         }
 
         .footer-text {
@@ -117,53 +104,40 @@
             color: var(--text-muted);
         }
 
-        /* Styling Alert agar sesuai dashboard */
         .alert {
             border-radius: 12px;
-            border: none;
             font-size: 14px;
         }
     </style>
 </head>
 
 <body>
-
     <div class="login-container">
         <div class="login-card">
             <div class="login-header text-center">
-                <!-- Icon Toko Sesuai Dashboard -->
-                <div class="brand-logo">
-                    <i class="bi bi-shop"></i>
-                </div>
-                <h1>Welcome Back</h1>
-                <p>Silakan masuk ke akun admin Anda</p>
+                <div class="brand-logo"><i class="bi bi-person-plus"></i></div>
+                <h1>Daftar Akun</h1>
+                <p>Buat akun admin marketplace Anda</p>
             </div>
 
-            @if (session('success'))
-                <div class="alert alert-success border-0 shadow-sm mb-4" style="background-color: #d1e7dd; color: #0f5132;">
-                    <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
-                </div>
-            @endif
-
-            <!-- Bagian Error Validasi (Sudah ada di kode sebelumnya) -->
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
+                        @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
                     </ul>
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('register') }}">
                 @csrf
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
-                        name="email" value="{{ old('email') }}" required autofocus>
+                    <label class="form-label">Nama Lengkap</label>
+                    <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
                 </div>
-
+                <div class="mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" name="email" class="form-control" value="{{ old('email') }}" required>
+                </div>
                 <div class="mb-4">
                     <label for="password" class="form-label">Password</label>
                     <div class="input-group">
@@ -177,38 +151,50 @@
                         </span>
                     </div>
                 </div>
+                <div class="mb-4">
+                    <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                    <div class="input-group">
+                        <input type="password"
+                            class="form-control border-end-0 @error('password_confirmation') is-invalid @enderror"
+                            id="password_confirmation" name="password_confirmation" required
+                            style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
 
-                <button type="submit" class="btn-primary">
-                    Login
-                </button>
+                        <span class="input-group-text bg-white border-start-0 text-muted"
+                            id="togglePasswordConfirmation"
+                            style="cursor: pointer; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border: 1px solid #e2e8f0;">
+                            <i class="bi bi-eye" id="eyeIconConfirmation"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Daftar Sekarang</button>
             </form>
 
             <div class="footer-text">
-                Belum punya akun? <a href="{{ route('register') }}" class="text-decoration-none"
-                    style="color: var(--primary-color); font-weight: 600;">Daftar Akun</a>
-            </div>
-
-            <div class="footer-text">
-                &copy; {{ date('Y') }} Marketplace Admin System
+                Sudah punya akun? <a href="{{ route('login') }}" class="text-decoration-none"
+                    style="color: var(--primary-color); font-weight: 600;">Login di sini</a>
             </div>
         </div>
     </div>
     <script>
-        const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#password');
-        const eyeIcon = document.querySelector('#eyeIcon');
+        function setupToggle(buttonId, inputId) {
+            const button = document.querySelector(buttonId);
+            const input = document.querySelector(inputId);
+            const icon = button.querySelector('i');
 
-        togglePassword.addEventListener('click', function () {
-            // Toggle tipe input
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
+            button.addEventListener('click', function () {
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                icon.classList.toggle('bi-eye');
+                icon.classList.toggle('bi-eye-slash');
+            });
+        }
 
-            // Toggle icon
-            this.querySelector('i').classList.toggle('bi-eye');
-            this.querySelector('i').classList.toggle('bi-eye-slash');
-        });
+        // Jalankan untuk password utama
+        setupToggle('#togglePassword', '#password');
+        // Jalankan untuk konfirmasi password
+        setupToggle('#togglePasswordConfirmation', '#password_confirmation');
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

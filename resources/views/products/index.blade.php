@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
+    @livewireStyles
     <style>
         :root {
             --bg-body: #f8fafc;
@@ -21,19 +23,31 @@
             --text-main: #1e293b;
             --text-muted: #64748b;
             --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --card-bg: #ffffff;
+            --border-color: #f1f5f9;
+        }
+
+        /* --- DARK MODE OVERRIDES --- */
+        [data-bs-theme='dark'] {
+            --bg-body: #0f172a;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
         }
 
         body {
             background-color: var(--bg-body);
             font-family: 'Inter', sans-serif;
             color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .main-wrapper {
             padding: 40px 0;
         }
 
-        /* Header Styles */
         .page-header {
             display: flex;
             justify-content: space-between;
@@ -41,61 +55,77 @@
             margin-bottom: 30px;
         }
 
-        /* Card & Table Style */
         .table-card {
-            background: #ffffff;
-            border: 1px solid #f1f5f9;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
             box-shadow: var(--card-shadow);
-            overflow: hidden; /* Agar border-radius memotong tabel */
+            overflow: hidden;
         }
 
         .table {
             margin-bottom: 0;
             vertical-align: middle;
+            color: inherit;
         }
 
         .table thead th {
-            background-color: #f8fafc;
+            background-color: var(--bg-body);
             color: var(--text-muted);
             font-weight: 600;
             font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
             padding: 16px 24px;
-            border-bottom: 1px solid #f1f5f9;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .table tbody td {
             padding: 16px 24px;
-            border-bottom: 1px solid #f8fafc;
-            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
             font-size: 0.9rem;
+        }
+
+        [data-bs-theme='dark'] .table tbody tr:hover {
+            background-color: #2d3748;
         }
 
         .table tbody tr:hover {
             background-color: #fcfdfe;
         }
 
-        /* Image Thumbnail */
         .product-img {
             width: 60px;
             height: 60px;
             object-fit: cover;
             border-radius: 8px;
-            border: 1px solid #f1f5f9;
+            border: 1px solid var(--border-color);
         }
 
-        /* Badge Stock */
         .badge-stock {
             padding: 6px 12px;
             border-radius: 6px;
             font-weight: 500;
-            background-color: #eff6ff;
-            color: #3b82f6;
+            background-color: rgba(99, 102, 241, 0.1);
+            color: var(--primary-soft);
         }
 
-        /* Button Styles */
+        /* Input Search Dark Mode Fix */
+        .input-group-text {
+            background-color: var(--card-bg) !important;
+            border-color: var(--border-color) !important;
+            color: var(--primary-soft);
+        }
+
+        .form-control {
+            background-color: var(--card-bg) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-main) !important;
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
         .btn-action {
             width: 36px;
             height: 36px;
@@ -103,17 +133,23 @@
             align-items: center;
             justify-content: center;
             border-radius: 8px;
-            transition: all 0.2s;
+            transition: 0.2s;
             border: none;
         }
 
-        .btn-view { background-color: #e0e7ff; color: #4338ca; }
-        .btn-edit { background-color: #fef3c7; color: #d97706; }
-        .btn-delete { background-color: #fee2e2; color: #dc2626; }
+        .btn-view {
+            background-color: rgba(99, 102, 241, 0.15);
+            color: #6366f1;
+        }
 
-        .btn-action:hover {
-            transform: translateY(-2px);
-            filter: brightness(0.95);
+        .btn-edit {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+        }
+
+        .btn-delete {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
         }
 
         .btn-add-new {
@@ -126,145 +162,107 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.2s;
+            transition: 0.2s;
         }
 
         .btn-add-new:hover {
             background-color: #4f46e5;
             color: white;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
         }
 
-        .btn-back-soft {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .btn-back-soft:hover { color: var(--primary-soft); }
-
-        /* Pagination custom */
-        .pagination {
-            margin-top: 20px;
-            padding: 0 24px 24px;
+        .theme-toggle-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
         }
     </style>
 </head>
+
 <body>
 
+    @include('admin.sidebar')
+
     <div class="container main-wrapper">
-        
-        <!-- Breadcrumb / Back Navigation -->
-        <div class="mb-2">
-            <a href="{{ route('admin.dashboard') }}" class="btn-back-soft">
-                <i class="bi bi-chevron-left"></i> Kembali ke Dashboard
-            </a>
-        </div>
 
-        <!-- Page Header -->
-        <div class="page-header">
+        <div class="d-flex justify-content-between align-items-end mb-4">
             <div>
-                <h3 class="fw-bold mb-1">Daftar Produk</h3>
-                <p class="text-muted small mb-0">Total terdapat {{ $products->total() }} produk dalam katalog Anda.</p>
+                <a href="{{ route('admin.dashboard') }}" class="text-muted text-decoration-none small">
+                    <i class="bi bi-chevron-left"></i> Kembali ke Dashboard
+                </a>
+                <h3 class="fw-bold mt-2 mb-0">Daftar Produk</h3>
             </div>
-            <a href="{{ route('products.create') }}" class="btn-add-new">
-                <i class="bi bi-plus-lg"></i> Tambah Produk
-            </a>
+
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <a href="{{ route('products.create') }}" class="btn btn-add-new shadow-sm">
+                    <i class="bi bi-plus-lg me-1"></i> Tambah Produk
+                </a>
+            </div>
         </div>
 
-        <!-- Table Card -->
-        <div class="table-card">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="text-center">No</th>
-                            <th scope="col">Produk</th>
-                            <th scope="col">Nama Produk</th>
-                            <th scope="col">Harga</th>
-                            <th scope="col">Stok</th>
-                            <th scope="col" class="text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($products as $product)
-                        <tr>
-                            <td class="text-center text-muted fw-medium">{{ ($products->currentPage() - 1) * $products->perPage() + $loop->iteration }}</td>
-                            <td>
-                                <img src="{{ asset('/storage/products/' .$product->image) }}" class="product-img shadow-sm" alt="Produk">
-                            </td>
-                            <td>
-                                <div class="fw-semibold">{{ $product->title }}</div>
-                                <div class="text-muted small">ID: #PRD-{{ $product->id }}</div>
-                            </td>
-                            <td class="fw-bold text-dark">
-                                {{ "Rp " . number_format($product->price, 0, ',', '.') }}
-                            </td>
-                            <td>
-                                <span class="badge-stock">
-                                    {{ $product->stock }} <small>Unit</small>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a href="{{ route('products.show', $product->id) }}" class="btn-action btn-view" title="Detail">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a href="{{ route('products.edit', $product->id) }}" class="btn-action btn-edit" title="Ubah">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <form onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');" action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn-action btn-delete" title="Hapus">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="6" class="text-center py-5">
-                                <div class="text-muted">
-                                    <i class="bi bi-box-seam fs-1 d-block mb-3 opacity-25"></i>
-                                    <p class="mb-0">Belum ada data produk tersedia.</p>
-                                    <a href="{{ route('products.create') }}" class="btn btn-link text-decoration-none small">Tambah produk pertama?</a>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+        <!-- Search Bar -->
+        <div class="mb-4">
+            <livewire:searchproduct />
+        </div>
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center p-4 border-top border-secondary-subtle">
+            <div class="text-muted small">
+                Showing {{ $products->firstItem() }} to {{ $products->lastItem() }}
             </div>
-
-            <!-- Pagination -->
-            <div class="d-flex justify-content-between align-items-center p-4 border-top">
-                <div class="text-muted small">
-                    Menampilkan {{ $products->firstItem() }} sampai {{ $products->lastItem() }} dari {{ $products->total() }} data
-                </div>
-                <div>
-                    {{ $products->links('pagination::bootstrap-5') }}
-                </div>
+            <div>
+                {{ $products->links() }}
             </div>
         </div>
     </div>
+    </div>
 
     <!-- Scripts -->
+    @livewireScripts
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-     @if(session('success'))
+
     <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: "{{ session('success') }}",
-            showConfirmButton: false,
-            timer: 2000
-        });
+        // --- LOGIKA DARK MODE ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const currentTheme = html.getAttribute('data-bs-theme');
+            const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            html.setAttribute('data-bs-theme', targetTheme);
+            localStorage.setItem('theme', targetTheme);
+            updateIcon(targetTheme);
+        }
+
+        function updateIcon(theme) {
+            const icon = document.getElementById('theme-icon');
+            if (theme === 'dark') {
+                icon.classList.replace('bi-moon-stars-fill', 'bi-sun-fill');
+            } else {
+                icon.classList.replace('bi-sun-fill', 'bi-moon-stars-fill');
+            }
+        }
+
+        // Jalankan saat pertama kali halaman dimuat
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+            updateIcon(savedTheme);
+        })();
     </script>
+
+    @if(session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success', title: 'Berhasil!', text: "{{ session('success') }}",
+                showConfirmButton: false, timer: 2000
+            });
+        </script>
     @endif
 </body>
+
 </html>

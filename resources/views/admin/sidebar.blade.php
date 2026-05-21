@@ -1,11 +1,11 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top py-2">
+<nav class="navbar navbar-expand-lg border-bottom sticky-top py-2 transition-theme">
     <div class="container">
         <!-- BRAND: Khusus Admin -->
         <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('admin.dashboard') }}">
-            <div class="bg-dark rounded-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+            <div class="bg-brand rounded-3 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
                 <i class="bi bi-shop text-white fs-5"></i>
             </div>
-            <span class="fw-bold text-dark" style="letter-spacing: -0.5px;">Khusus Admin</span>
+            <span class="fw-bold brand-text" style="letter-spacing: -0.5px;">Khusus Admin</span>
         </a>
 
         <!-- Hamburger Button untuk Mobile -->
@@ -30,59 +30,89 @@
                 </li>
             </ul>
 
-            <!-- USER INFO & DROPDOWN LOGOUT -->
-            <div class="dropdown border-start ps-lg-4">
-                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
-                    <!-- Inisial User -->
-                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-sm me-2" 
-                         style="width: 36px; height: 36px; font-size: 0.9rem;">
-                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                    </div>
-                    <!-- Nama User -->
-                    <div class="d-none d-sm-block">
-                        <small class="text-muted d-block" style="font-size: 10px; line-height: 1;">Logged in as</small>
-                        <strong class="text-dark small">{{ Auth::user()->name }}</strong>
-                    </div>
-                </a>
+            <!-- DARK MODE TOGGLE & USER INFO -->
+            <div class="d-flex align-items-center border-start ps-lg-4 gap-3">
                 
-                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-3 p-2" style="border-radius: 12px; min-width: 200px;">
-                    <li><h6 class="dropdown-header small text-uppercase">Choose</h6></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="dropdown-item rounded-3 py-2 text-danger">
-                                <i class="bi bi-box-arrow-right me-2"></i> Logout
-                            </button>
-                        </form>
-                    </li>
-                </ul>
+                <!-- TOMBOL DARK MODE -->
+                <button class="btn btn-link text-muted p-0 border-0 shadow-none" type="button" onclick="toggleTheme()">
+                    <i class="bi bi-moon-stars-fill fs-5" id="theme-icon"></i>
+                </button>
+
+                <!-- DROPDOWN USER -->
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-sm me-2" 
+                             style="width: 36px; height: 36px; font-size: 0.9rem;">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        </div>
+                        <div class="d-none d-sm-block">
+                            <small class="text-muted d-block" style="font-size: 10px; line-height: 1;">Logged in as</small>
+                            <strong class="user-name-text small">{{ Auth::user()->name }}</strong>
+                        </div>
+                    </a>
+                    
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-3 p-2 rounded-4">
+                        <li><h6 class="dropdown-header small text-uppercase">Opsi Akun</h6></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="dropdown-item rounded-3 py-2 text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 </nav>
 
 <style>
-    /* Style untuk link aktif */
+    /* --- CSS DASAR (LIGHT MODE) --- */
+    .navbar { background-color: #ffffff; transition: 0.3s ease; }
+    .brand-text, .user-name-text { color: #1e293b; }
+    .bg-brand { background-color: #1e293b; }
+    
     .active-link {
-        color: #6366f1 !important; /* Indigo */
+        color: #6366f1 !important;
         background-color: #f5f7ff;
         border-radius: 8px;
         font-weight: 600;
     }
     
-    .nav-link {
-        transition: all 0.2s;
-        font-size: 0.95rem;
-    }
-
+    .nav-link { transition: all 0.2s; font-size: 0.95rem; }
     .nav-link:hover:not(.active-link) {
         color: #6366f1 !important;
         background-color: #f8fafc;
         border-radius: 8px;
     }
 
-    .dropdown-item:active {
-        background-color: #6366f1;
+    /* --- CSS SAAT DARK MODE AKTIF --- */
+    [data-bs-theme='dark'] .navbar { 
+        background-color: #1e293b !important; 
+        border-color: #334155 !important;
     }
+    [data-bs-theme='dark'] .brand-text, 
+    [data-bs-theme='dark'] .user-name-text { color: #f1f5f9 !important; }
+    
+    [data-bs-theme='dark'] .bg-brand { background-color: #334155; }
+    
+    [data-bs-theme='dark'] .active-link {
+        background-color: rgba(99, 102, 241, 0.2);
+        color: #a5b4fc !important;
+    }
+    
+    [data-bs-theme='dark'] .nav-link:hover:not(.active-link) {
+        background-color: #334155;
+        color: #f1f5f9 !important;
+    }
+
+    [data-bs-theme='dark'] .dropdown-menu {
+        background-color: #1e293b;
+        border: 1px solid #334155;
+    }
+    [data-bs-theme='dark'] .dropdown-item { color: #cbd5e1; }
+    [data-bs-theme='dark'] .dropdown-item:hover { background-color: #334155; color: white; }
 </style>
