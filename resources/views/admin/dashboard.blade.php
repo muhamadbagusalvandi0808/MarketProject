@@ -137,7 +137,7 @@
             <!-- Header Konten: Ringkasan & Tanggal -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h4 class="fw-bold mb-1">Ringkasan</h4>
+                    <h4 class="fw-bold mb-1">Ringkasan System</h4>
                     <p class="text-muted small mb-0">Kelola operasional marketplace Anda di sini.</p>
                 </div>
                 <div class="date-badge shadow-sm">
