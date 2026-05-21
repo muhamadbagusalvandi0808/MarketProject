@@ -189,7 +189,7 @@
             </div>
 
             <div class="footer-text">
-                &copy; {{ date('Y') }} Marketplace Admin System
+                &copy; {{ date('Y') }} Marketplace Admin Sistem
             </div>
         </div>
     </div>
